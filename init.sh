@@ -16,7 +16,7 @@ sudo pacman -S \
   ttf-fira-code ttf-nerd-fonts-symbols \
   pulseaudio pavucontrol \
   swaybg wl-clipboard \
-  stow waybar
+  stow waybar neovim
 
 # Optional: swaylock-effects (prettier lock screen)
 #yay -S swaylock-effects --noconfirm
@@ -27,6 +27,12 @@ nmcli networking on
 # Set wallpaper using swaybg if desired
 # cp your wallpaper to that folder
 mkdir -p ~/Pictures/wallpapers
+
+# Install LunarVim if not already installed
+if ! command -v lvim &> /dev/null; then
+  echo "Installing LunarVim..."
+  LV_BRANCH='release-1.4/neovim-0.9' bash <(curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.4/neovim-0.9/utils/installer/install.sh)
+fi
 
 # Create symlink from this repository to your local environment
 stow .
