@@ -26,7 +26,8 @@ window#waybar {
   border-bottom: 1px solid alpha(@surface, 0.6);
 }
 
-/* Default module pill — neutral. Color is reserved for STATE, not module identity. */
+/* Default module — neutral, full bar height (top edge clickable per Fitts's law).
+   Color is reserved for STATE, not module identity. */
 #workspaces button,
 #mode,
 #clock,
@@ -41,8 +42,8 @@ window#waybar {
   background: transparent;
   color: @text;
   padding: 0 10px;
-  margin: 3px 2px;
-  border-radius: 8px;
+  margin: 0 2px;
+  border-radius: 0;
   transition: background-color 150ms ease, color 150ms ease;
 }
 
