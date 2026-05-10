@@ -30,6 +30,9 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+e exec "swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'"
 bindsym $mod+l exec "swaylock -c 000000"
 
+# Escape dismisses all mako notifications (heads up: globally captures Escape).
+bindsym --no-repeat Escape exec makoctl dismiss --all
+
 ### Arrows keys focus
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down

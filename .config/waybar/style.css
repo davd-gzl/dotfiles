@@ -1,89 +1,93 @@
+/* Catppuccin Mocha — matches ~/.config/mako/config */
+@define-color base    #1e1e2e;
+@define-color mantle  #181825;
+@define-color surface #313244;
+@define-color overlay #6c7086;
+@define-color text    #cdd6f4;
+@define-color mauve   #cba6f7;   /* accent */
+@define-color red     #f38ba8;   /* critical */
+@define-color green   #a6e3a1;   /* good   */
+@define-color peach   #fab387;   /* warn   */
+
 * {
-  font-family: monospace;
-  font-size: 12px;
-  color: #cacaca; /* Light text color */
-  background: #222222; /* Dark background */
-  padding: 0 4px;
+  font-family: "JetBrainsMono Nerd Font", "JetBrainsMono Nerd Font Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 0;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
 }
 
+/* Edge-to-edge bar */
 window#waybar {
-  background-color: #222222; /* Dark background */
-  border: none;
+  background: alpha(@base, 0.92);
+  color: @text;
+  border-bottom: 1px solid alpha(@surface, 0.6);
 }
 
-#workspaces button {
-  background: #222222; /* Dark background */
-  color: #ffffff; /* Light text color */
-  border: none;
-  padding: 0 6px;
-}
-
-#workspaces button:hover {
-  background: #444444; /* Darker gray on hover */
-}
-
-#workspaces button.focused {
-  background: #585858; /* Green for focused workspace */
-  color: #ffffff;
-}
-
+/* Default module pill — neutral. Color is reserved for STATE, not module identity. */
+#workspaces button,
+#mode,
 #clock,
-#network,
-#battery,
+#idle_inhibitor,
+#language,
 #pulseaudio,
-#cpu,
-#memory,
-#tray {
-  background: #222222; /* Dark background */
-  color: #ffffff; /* Light text color */
+#network,
+#backlight,
+#battery,
+#tray,
+#custom-power {
+  background: transparent;
+  color: @text;
+  padding: 0 10px;
+  margin: 3px 2px;
+  border-radius: 8px;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* Workspaces */
+#workspaces button {
   padding: 0 8px;
-  transition: background-color 0.2s ease;
+  color: @text;
+}
+#workspaces button:hover {
+  background: alpha(@surface, 0.6);
+  color: @text;
+}
+#workspaces button.focused,
+#workspaces button.visible {
+  background: @mauve;
+  color: @base;
+}
+#workspaces button.urgent {
+  background: @red;
+  color: @base;
 }
 
-#network {
-  background-color: #2980b9; /* Blue for network */
+/* Center clock — slight emphasis */
+#clock {
+  font-weight: 600;
+  color: @text;
+  padding: 0 14px;
 }
 
-#network.disconnected {
-  background-color: #e74c3c; /* Red for disconnected network */
-}
+/* States — color only when something needs attention */
+#battery.warning:not(.charging)  { color: @peach; }
+#battery.critical:not(.charging) { background: @red;   color: @base; }
+#battery.charging                { color: @green; }
 
-#battery {
-  background-color: #2ecc71; /* Green for battery */
-}
+#network.disconnected            { color: @overlay; }
+#pulseaudio.muted                { color: @overlay; }
 
-#battery.charging {
-  background-color: #27ae60; /* Darker green when charging */
-}
+#idle_inhibitor.activated        { color: @peach; }
 
-#battery.critical:not(.charging) {
-  background-color: #e74c3c; /* Red for critical battery */
+/* Power button — subtle red on hover */
+#custom-power {
+  color: @overlay;
+  padding: 0 12px;
 }
+#custom-power:hover { color: @red; }
 
-#pulseaudio {
-  background-color: #f39c12; /* Yellow for audio */
-}
-
-#pulseaudio.muted {
-  background-color: #7f8c8d; /* Muted audio color */
-}
-
-#cpu {
-  background-color: #f39c12; /* Yellow for CPU */
-}
-
-#memory {
-  background-color: #9b59b6; /* Purple for memory */
-}
-
-#tray {
-  background-color: #34495e; /* Dark blue-gray for tray */
-}
-
-#tray > .needs-attention {
-  background-color: #e74c3c; /* Red for tray items needing attention */
-}
-
-#tray > .passive {
-  background-color: #7f8c8d; /* Gray for passive tray items */
-}
+#tray > .needs-attention { background: @red; color: @base; }
+#tray > .passive         { color: @overlay; }
