@@ -25,10 +25,16 @@ case "$event" in
     *)            u=normal;   c=claude-other;     body="${msg:-Update}" ;;
 esac
 
-# Title = matching VSCode window's title (minus suffix), fallback to "Claude · proj".
-title=$(swaymsg -t get_tree 2>/dev/null | jq -r --arg p "$proj" \
-    '[.. | objects | select(.window_properties?.class?=="Code" and ((.name//"")|endswith(" - "+$p+" - Visual Studio Code"))) | .name] | first // ""')
-title=${title%" - Visual Studio Code"}
+# One sway snapshot: this project's VSCode window title + the truly-focused
+# leaf (sway has multiple focused=true nodes — leaf is the one with no children).
+tree=$(swaymsg -t get_tree 2>/dev/null)
+proj_title=$(printf '%s' "$tree" | jq -r --arg p "$proj" '[.. | objects | select(.window_properties?.class?=="Code" and ((.name//"")|endswith(" - "+$p+" - Visual Studio Code"))) | .name] | first // ""')
+focused=$(printf '%s' "$tree" | jq -r '[.. | objects | select(.focused==true and .pid?!=null and (.nodes//[])==[] and (.floating_nodes//[])==[]) | .name] | first // ""')
+
+# Skip if the user is already looking at this workspace's VSCode window.
+[ -n "$proj_title" ] && [ "$focused" = "$proj_title" ] && exit 0
+
+title=${proj_title%" - Visual Studio Code"}
 title=${title:-Claude · $proj}
 
 # Fire and remember id→cwd so the click handler can focus the right workspace.
