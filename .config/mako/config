@@ -38,9 +38,10 @@ on-button-left=exec /home/davd/.claude/notify-click.sh $id
 # Per-event colors (Catppuccin Mocha palette) — distinguishes the kind of
 # attention needed at a glance.
 
-# Done — green
+# Done — green, title only (no body)
 [app-name="Claude Code" category=claude-done]
 border-color=#a6e3a1
+format=<b>%s</b>
 
 # Error/crash — red
 [app-name="Claude Code" category=claude-error]
