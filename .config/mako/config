@@ -35,10 +35,29 @@ padding=18
 default-timeout=8000
 on-button-left=exec /home/davd/.claude/notify-click.sh $id
 
-# Claude waiting for input → red
-[app-name="Claude Code" urgency=critical]
+# Per-event colors (Catppuccin Mocha palette) — distinguishes the kind of
+# attention needed at a glance.
+
+# Done — green
+[app-name="Claude Code" category=claude-done]
+border-color=#a6e3a1
+
+# Error/crash — red
+[app-name="Claude Code" category=claude-error]
 border-color=#f38ba8
 
-# Claude finished → green
-[app-name="Claude Code" urgency=low]
-border-color=#a6e3a1
+# Idle / waiting for input — mauve
+[app-name="Claude Code" category=claude-waiting]
+border-color=#cba6f7
+
+# AskUserQuestion — yellow
+[app-name="Claude Code" category=claude-question]
+border-color=#f9e2af
+
+# Tool permission requested — peach
+[app-name="Claude Code" category=claude-permission]
+border-color=#fab387
+
+# Elicitation (MCP structured input) — sky
+[app-name="Claude Code" category=claude-elicit]
+border-color=#89dceb

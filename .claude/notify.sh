@@ -6,19 +6,20 @@ cwd=$(printf '%s' "$input" | jq -r '.cwd // ""')
 proj=$(basename "$cwd")
 suffix=" - $proj - Visual Studio Code"
 
-# Event → urgency (mako maps to color: critical=red, low=green) + body.
+# Event → urgency + category (per-event mako color) + body. Each event has a
+# distinct body so you can triage at a glance. See ~/.config/mako/config.
+tool=$(printf '%s' "$input" | jq -r '.tool_name // .tool // ""')
 case "$event" in
-    Stop)              urgency=low;      msg="Done" ;;
-    StopFailure)       urgency=critical; msg="Claude errored" ;;
-    Notification)      urgency=critical; msg=$(printf '%s' "$input" | jq -r '.message // "Waiting for input"') ;;
-    PreToolUse)        urgency=critical; msg="Question for you" ;;
-    PermissionRequest) urgency=critical; msg="Permission requested" ;;
-    Elicitation)       urgency=critical; msg="Input needed" ;;
-    *)                 urgency=normal;   msg=$(printf '%s' "$input" | jq -r '.message // "Update"') ;;
+    Stop)              urgency=low;      cat=claude-done;       body="Response ready" ;;
+    StopFailure)       urgency=critical; cat=claude-error;      body=$(printf '%s' "$input" | jq -r '.message // .error // "Claude crashed — check the chat"') ;;
+    Notification)      urgency=critical; cat=claude-waiting;    body=$(printf '%s' "$input" | jq -r '.message // "Waiting for your input"') ;;
+    PreToolUse)        urgency=critical; cat=claude-question;   body="Question — pick an option" ;;
+    PermissionRequest) urgency=critical; cat=claude-permission; body="Approve ${tool:-tool}?" ;;
+    Elicitation)       urgency=critical; cat=claude-elicit;     body="MCP server needs input" ;;
+    *)                 urgency=normal;   cat=claude-other;      body=$(printf '%s' "$input" | jq -r '.message // "Update"') ;;
 esac
 
-# Debug log so we can see what events actually fire
-printf '%s [%s] urgency=%s msg=%s\n' "$(date -Iseconds)" "$event" "$urgency" "$msg" >> /tmp/claude-notify.log
+printf '%s [%s] cat=%s body=%s\n' "$(date -Iseconds)" "$event" "$cat" "$body" >> /tmp/claude-notify.log
 
 # Use the matching VSCode window's title (minus " - Visual Studio Code") as
 # the notification title, so the user can tell which chat it came from.
@@ -26,7 +27,7 @@ win=$(swaymsg -t get_tree 2>/dev/null | jq -r --arg s "$suffix" '[.. | objects |
 title=${win:-Claude · $proj}
 title=${title% - Visual Studio Code}
 
-id=$(notify-send -p -u "$urgency" -a 'Claude Code' -i utilities-terminal "$title" "$msg")
+id=$(notify-send -p -u "$urgency" -c "$cat" -a 'Claude Code' -i utilities-terminal "$title" "$body")
 
 # Remember id→cwd so the click handler can focus the right workspace
 m=/tmp/claude-notify-map
