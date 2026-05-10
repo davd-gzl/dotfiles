@@ -1,0 +1,44 @@
+# Catppuccin Mocha base
+font=JetBrainsMono Nerd Font 11
+background-color=#1e1e2eee
+text-color=#cdd6f4
+border-color=#cba6f7
+border-size=2
+border-radius=12
+padding=14
+margin=12
+default-timeout=6000
+icons=1
+max-icon-size=48
+layer=overlay
+anchor=top-right
+sort=-time
+format=<b>%s</b>\n%b
+
+[urgency=low]
+border-color=#a6e3a1
+
+[urgency=normal]
+border-color=#cba6f7
+
+[urgency=critical]
+border-color=#f38ba8
+default-timeout=8000
+
+# Claude Code — larger, slightly longer, click-to-focus
+[app-name="Claude Code"]
+border-size=3
+width=460
+height=180
+font=JetBrainsMono Nerd Font 12
+padding=18
+default-timeout=8000
+on-button-left=exec /home/davd/.claude/notify-click.sh $id
+
+# Claude waiting for input → red
+[app-name="Claude Code" urgency=critical]
+border-color=#f38ba8
+
+# Claude finished → green
+[app-name="Claude Code" urgency=low]
+border-color=#a6e3a1

@@ -1,7 +1,7 @@
 # ~/.config/sway/config
 
 ### Set your preferred terminal and app launcher
-set $term alacritty
+set $term kitty 
 set $menu wofi
 
 ### Default Mod key (Mod4 = Super/Windows key)
@@ -10,17 +10,16 @@ set $mod Mod4
 ### Font for window titles
 font pango:monospace 10
 
-### Output config (change to your monitor name)
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-
 ### Start some background apps
 exec nm-applet
-exec mako
+exec dunst
 exec swayidle -w \
   timeout 300 'swaylock -f -c 000000' \
   timeout 600 'swaymsg "output * dpms off"' \
   resume 'swaymsg "output * dpms on"' \
   before-sleep 'swaylock -f -c 000000'
+
+# output eDP-1 scale 1.5
 
 ### Basic keybindings
 bindsym $mod+Return exec $term
@@ -29,6 +28,7 @@ bindsym $mod+q kill
 bindsym $mod+Shift+r reload
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+e exec "swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'"
+bindsym $mod+l exec "swaylock -c 000000"
 
 ### Arrows keys focus
 bindsym $mod+Left focus left
@@ -74,10 +74,10 @@ bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
 # Auto-start apps on specific workspaces
-exec swaymsg "workspace 1:🖥️; exec alacritty"
+exec swaymsg "workspace 1:🖥️; exec $term"
 exec swaymsg "workspace 2:💻; exec code"
 exec swaymsg "workspace 3:🌍; exec firefox"
-exec swaymsg "workspace 4:💬; exec vesktop"
+exec swaymsg "workspace 4:💬; exec obsidian"
 
 # Special keys to adjust volume via PulseAudio
 bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
@@ -118,9 +118,11 @@ bindsym $mod+r mode "resize"
 input * {
     natural_scroll enabled
     tap enabled
-    xkb_layout us
-    xkb_variant workman-intl
+    xkb_layout workman-fr
 }
+
+# Toggle between Workman-intl and Workman-FR with Super+Space
+bindsym $mod+Shift+F1 input * xkb_switch_layout next
 
 bar {
     swaybar_command waybar
