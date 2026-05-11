@@ -12,7 +12,7 @@ font pango:monospace 10
 
 ### Start some background apps
 exec nm-applet
-exec dunst
+exec mako
 exec swayidle -w \
   timeout 300 'swaylock -f -c 000000' \
   timeout 600 'swaymsg "output * dpms off"' \
