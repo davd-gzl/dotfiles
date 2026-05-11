@@ -10,4 +10,4 @@ cwd=$(awk -v id="$id" -F: '$1 == id { sub(/^[^:]*:/, ""); print; exit }' "$m" 2>
 
 proj=$(basename "$cwd")
 swaymsg "[class=\"Code\" title=\" - $proj - Visual Studio Code\$\"]" focus >/dev/null 2>&1 \
-    || code -r "$cwd" >/dev/null 2>&1 &
+    || code -n "$cwd" >/dev/null 2>&1 &
