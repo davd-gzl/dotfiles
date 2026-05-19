@@ -38,6 +38,7 @@ window#waybar {
 #backlight,
 #battery,
 #tray,
+#custom-theme,
 #custom-power {
   background: transparent;
   color: @text;
@@ -82,6 +83,10 @@ window#waybar {
 #pulseaudio.muted                { color: @overlay; }
 
 #idle_inhibitor.activated        { color: @peach; }
+
+#custom-theme.light              { color: @peach; }
+#custom-theme.dark               { color: @mauve; }
+#custom-theme:hover              { background: alpha(@surface, 0.6); }
 
 /* Power button — subtle red on hover */
 #custom-power {
