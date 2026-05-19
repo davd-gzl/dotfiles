@@ -1,0 +1,59 @@
+{
+    "editor.fontFamily": "'Fira Code', 'JetBrains Mono', monospace",
+    "editor.fontLigatures": true,
+    "editor.fontWeight": "545",
+    "editor.fontSize": 16,
+    "terminal.integrated.fontWeight": "540",
+    "terminal.integrated.fontWeightBold": "600",
+    "editor.lineHeight": 1.20,
+    "editor.letterSpacing": -0.2,
+    "terminal.integrated.fontSize": 15,
+    "chat.editor.fontSize": 20,
+    "markdown.preview.fontSize": 15,
+    "chat.editor.fontFamily": "'Fira Code', monospace",
+    "markdown.preview.fontFamily": "'Fira Code', monospace",
+    "files.autoSave": "onFocusChange",
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+        "gno": false
+    },
+    "git.autofetch": true,
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.editor.empty.hint": "hidden",
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "workbench.settings.openDefaultKeybindings": true,
+    "python.defaultInterpreterPath": "/sbin/python3.14",
+    "git.suggestSmartCommit": false,
+    "git.blame.editorDecoration.enabled": true,
+    "chat.tools.terminal.autoApprove": {
+        "go": true,
+        "gnoweb_airgapped": true,
+        "adduserfrom)$\"": true,
+        "gno": true,
+        "./build/supernova": true,
+        "sed": true,
+        "npm run all": true
+    },
+    "chat.agent.maxRequests": 100,
+    "go.toolsManagement.autoUpdate": true,
+    "githubPullRequests.pullBranch": "never",
+    "gno.toolsEnvVars": {
+        "GOPACKAGESDRIVER": ":memory:"
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    "claudeCode.preferredLocation": "panel",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "workbench.colorTheme": "Solarized Dark+",
+    "window.autoDetectColorScheme": true,
+    "workbench.preferredDarkColorTheme": "Solarized Dark+",
+    "workbench.preferredLightColorTheme": "Solarized Light+",
+    "terminal.integrated.fontFamily": "'Fira Code', 'JetBrains Mono', monospace",
+    "diffEditor.renderSideBySide": false,
+    "markdown-preview-enhanced.previewTheme": "vscode.css"
+}
