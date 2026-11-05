@@ -5,6 +5,18 @@ g() { printf '%s' "$input" | jq -r ".${1} // \"\""; }
 event=$(g hook_event_name); cwd=$(g cwd); tool=$(g tool_name); msg=$(g message)
 proj=$(basename "$cwd")
 
+# Stop: wait, then skip if the session carried on (a Stop hook's feedback, a
+# background agent waking it) — only a turn that stays stopped needs the user.
+if [ "$event" = Stop ]; then
+    t=$(g transcript_path); start=$(date +%s)
+    sleep 15
+    last=$(tail -n 200 "$t" 2>/dev/null | jq -rs '[.[] | select(.type=="user" or .type=="assistant") | .timestamp] | last // "" | try (sub("\\.[0-9]+Z$";"Z") | fromdateiso8601) catch 0' 2>/dev/null)
+    [ "${last:-0}" -gt "$start" ] && exit 0
+    # Only a turn that asks something, or a long request that finished, gets a notification.
+    verdict=$(python3 "$HOME/.claude/notify-gate.py" "$t" 2>/dev/null)
+    [ -z "$verdict" ] && exit 0
+fi
+
 # Dedupe: silence overlapping fires within 2s for the same project.
 f="/tmp/claude-notify-last-${proj:-_}"
 [ -f "$f" ] && [ $(($(date +%s) - $(cat "$f"))) -lt 2 ] && exit 0
@@ -12,7 +24,12 @@ date +%s > "$f"
 
 # Event → urgency + category (per-event mako color) + body.
 case "$event" in
-    Stop)         u=low;      c=claude-done;      body="" ;;
+    Stop)
+        case "$verdict" in
+            needs*) u=critical; c=claude-waiting
+                    body=$(printf '%s' "${verdict#needs }" | cut -c1-200 | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g') ;;
+            *)      u=low;      c=claude-done;    body="" ;;
+        esac ;;
     StopFailure)  u=critical; c=claude-error;     body="${msg:-Claude crashed — check the chat}" ;;
     Notification) u=critical; c=claude-waiting;   body="${msg:-Waiting for your input}" ;;
     Elicitation)  u=critical; c=claude-elicit;    body="MCP server needs input" ;;
@@ -33,6 +50,8 @@ focused=$(printf '%s' "$tree" | jq -r '[.. | objects | select(.focused==true and
 
 # Skip if the user is already looking at this workspace's VSCode window.
 [ -n "$proj_title" ] && [ "$focused" = "$proj_title" ] && exit 0
+# Skip if the Claude app has focus: its sidebar already shows which session waits.
+[ "$(printf '%s' "$tree" | jq -r '[.. | objects | select(.focused==true and .pid?!=null and (.nodes//[])==[] and (.floating_nodes//[])==[]) | .app_id] | first // ""')" = com.anthropic.Claude ] && exit 0
 
 title=${proj_title%" - Visual Studio Code"}
 title=${title:-Claude · $proj}
