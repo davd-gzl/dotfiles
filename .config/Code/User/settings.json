@@ -43,9 +43,6 @@
     "chat.agent.maxRequests": 100,
     "go.toolsManagement.autoUpdate": true,
     "githubPullRequests.pullBranch": "never",
-    "gno.toolsEnvVars": {
-        "GOPACKAGESDRIVER": ":memory:"
-    },
     "security.workspace.trust.untrustedFiles": "open",
     "claudeCode.preferredLocation": "panel",
     "diffEditor.ignoreTrimWhitespace": false,
@@ -55,5 +52,44 @@
     "workbench.preferredLightColorTheme": "Solarized Light+",
     "terminal.integrated.fontFamily": "'Fira Code', 'JetBrains Mono', monospace",
     "diffEditor.renderSideBySide": false,
-    "markdown-preview-enhanced.previewTheme": "vscode.css"
+    "markdown-preview-enhanced.previewTheme": "vscode.css",
+    "go.languageServerFlags": ["-remote=auto"],
+    "gopls": {
+        "ui.diagnostic.staticcheck": false,
+        "ui.diagnostic.analyses": {
+            "unusedparams": false,
+            "unusedwrite": false
+        }
+    },
+    "go.lintOnSave": "off",
+    "go.vetOnSave": "off",
+    "security.promptForLocalFileProtocolHandling": false,
+    // Do not pin GNOROOT here: gnopls would then resolve stdlibs from that one
+    // checkout no matter which gno tree is open, so every other worktree gets
+    // stale stdlibs and "missed import" errors. Left unset, gnoenv infers it
+    // per folder via `go list -m github.com/gnolang/gno`.
+    "gno.toolsEnvVars": {
+        "GOPACKAGESDRIVER": ":memory:"
+    },
+    "gno.lintOnSave": "off",
+    "gno.vetOnSave": "off",
+    "gnopls": {
+        // Filters are relative to the open folder, so an allowlist tied to one
+        // layout ("-", "+gno") excludes every file when the folder is a gno
+        // checkout itself. Deny-list only, so this holds in both a gno checkout
+        // and a parent folder holding one. "**/x" does not match a root-level
+        // "x", hence the bare entries alongside the nested ones.
+        "build.directoryFilters": [
+            "-**/node_modules",
+            "-examples_ignored",
+            "-gno/examples_ignored",
+            "-.worktrees",
+            "-.repos"
+        ]
+    },
+    "js/ts.experimental.useTsgo": true,
+    // Match shortcuts by the character a key types, not its physical position:
+    // sway reports a US layout, so the default dispatch reads every key as qwerty.
+    "keyboard.dispatch": "keyCode",
+    "window.zoomLevel": 0.5
 }
