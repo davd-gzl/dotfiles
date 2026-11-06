@@ -9,6 +9,8 @@
   "modules-center": ["clock"],
   "modules-right":  [
     "custom/theme",
+    "custom/wlsunset",
+    "custom/syncthing",
     "idle_inhibitor",
     "sway/language",
     "pulseaudio",
@@ -25,6 +27,26 @@
     "exec": "$HOME/.config/waybar/scripts/theme-toggle.sh status",
     "on-click": "$HOME/.config/waybar/scripts/theme-toggle.sh toggle",
     "signal": 8,
+    "tooltip": true
+  },
+
+  "custom/wlsunset": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "$HOME/.config/waybar/scripts/wlsunset-toggle.sh status",
+    "on-click": "$HOME/.config/waybar/scripts/wlsunset-toggle.sh toggle",
+    "interval": 60,
+    "signal": 9,
+    "tooltip": true
+  },
+
+  "custom/syncthing": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "$HOME/.config/waybar/scripts/syncthing-toggle.sh status",
+    "on-click": "$HOME/.config/waybar/scripts/syncthing-toggle.sh toggle",
+    "interval": 10,
+    "signal": 10,
     "tooltip": true
   },
 

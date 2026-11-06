@@ -13,6 +13,9 @@ font pango:monospace 10
 ### Start some background apps
 exec nm-applet
 exec mako
+# Blue light filter. Temperatures live in the script, which the waybar button
+# shares so the two never disagree, and the location in the private settings.
+exec $HOME/.config/waybar/scripts/wlsunset-toggle.sh start
 exec swayidle -w \
   timeout 300 'swaylock -f -c 000000' \
   timeout 600 'swaymsg "output * dpms off"' \
@@ -80,7 +83,7 @@ bindsym $mod+Shift+0 move container to workspace 10
 exec swaymsg "workspace 1:🖥️; exec $term"
 exec swaymsg "workspace 2:💻; exec code"
 exec swaymsg "workspace 3:🌍; exec firefox"
-exec swaymsg "workspace 4:💬; exec obsidian"
+exec swaymsg "workspace 5; exec obsidian"
 
 # Special keys to adjust volume via PulseAudio
 bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
@@ -90,6 +93,8 @@ bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ t
 # Special keys to adjust brightness via brightnessctl
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+# Cycle the blue light filter: automatic -> day -> night. Same action as the bar button.
+bindsym $mod+Shift+n exec $HOME/.config/waybar/scripts/wlsunset-toggle.sh toggle
 # Special key to take a screenshot with grim
 bindsym Print exec grim
 
@@ -132,3 +137,6 @@ bar {
 }
 
 include /etc/sway/config.d/*
+
+# Machine-specific startup from the private settings, if they are linked.
+include ~/.config/sway/private.d/*

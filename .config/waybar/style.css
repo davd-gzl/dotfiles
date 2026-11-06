@@ -8,6 +8,7 @@
 @define-color red     #f38ba8;   /* critical */
 @define-color green   #a6e3a1;   /* good   */
 @define-color peach   #fab387;   /* warn   */
+@define-color blue    #89b4fa;   /* cool   */
 
 * {
   font-family: "JetBrainsMono Nerd Font", "JetBrainsMono Nerd Font Mono", monospace;
@@ -39,6 +40,8 @@ window#waybar {
 #battery,
 #tray,
 #custom-theme,
+#custom-wlsunset,
+#custom-syncthing,
 #custom-power {
   background: transparent;
   color: @text;
@@ -87,6 +90,17 @@ window#waybar {
 #custom-theme.light              { color: @peach; }
 #custom-theme.dark               { color: @mauve; }
 #custom-theme:hover              { background: alpha(@surface, 0.6); }
+
+/* Blue light filter: neutral while it follows the sun, colored when held. */
+#custom-wlsunset.day             { color: @blue;    }
+#custom-wlsunset.night           { color: @peach;   }
+#custom-wlsunset.off             { color: @overlay; }
+#custom-wlsunset:hover           { background: alpha(@surface, 0.6); }
+
+/* Tablet sync: bright while it is on the network, dim while it is off. */
+#custom-syncthing.on             { color: @green;   }
+#custom-syncthing.off            { color: @overlay; }
+#custom-syncthing:hover          { background: alpha(@surface, 0.6); }
 
 /* Power button — subtle red on hover */
 #custom-power {
