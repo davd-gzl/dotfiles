@@ -34,12 +34,19 @@ def typed(content):
 class Turn:
     def __init__(self):
         self.reply, self.ask, self.asked_at, self.now = "", None, None, None
+        self.held = ""
         self.running = set()
 
     def feed(self, row):
         """Takes one transcript row; a notice carrying a tool-use id ends that background task."""
         kind = row.get("type")
         if row.get("isSidechain"):
+            return
+        # A Stop hook's hold is no prompt: the reply it held stays part of the turn.
+        content = (row.get("message") or {}).get("content")
+        if kind == "user" and isinstance(content, str) and content.startswith("Stop hook feedback"):
+            self.held = "\n".join(t for t in (self.held, self.reply) if t)
+            self.reply = ""
             return
         if kind == "queue-operation" or (kind == "attachment" and (row.get("attachment") or {}).get("type") == "queued_command"):
             if row.get("operation") != "remove":
@@ -64,18 +71,21 @@ class Turn:
                     if any(s in result[:300] for s in LAUNCHED):
                         self.running.add(x.get("tool_use_id"))
             if typed(content) is not None:
-                self.asked_at, self.ask = when(row), None
+                self.asked_at, self.ask, self.held = when(row), None, ""
 
     def verdict(self):
-        text = FENCE.sub("", self.reply).strip()
+        text = FENCE.sub("", "\n".join(t for t in (self.held, self.reply) if t)).strip()
         tldr = next((l[6:].strip() for l in reversed(text.splitlines()) if l.startswith("TL;DR:")), "")
         if self.ask:
             return f"needs {self.ask}"
-        if ASKS.search(text):
-            return f"needs {tldr or text.splitlines()[-1]}"
+        asking = [t for t in (FENCE.sub("", x).strip() for x in (self.held, self.reply) if x) if ASKS.search(t)]
+        if asking:
+            return f"needs {tldr or asking[-1].splitlines()[-1]}"
         if self.running or not (self.now and self.asked_at) or self.now - self.asked_at < LONG_RUN:
             return None
-        ended = next((l for l in text.splitlines() if l.startswith(("Done:", "Not done:"))), tldr)
+        # The final reply's line wins over one in a reply a hook held before it.
+        lines = [l for t in (self.reply, self.held) for l in FENCE.sub("", t).splitlines()]
+        ended = next((l.replace("**", "") for l in lines if l.lstrip("*").startswith(("Done:", "Not done:"))), tldr)
         return f"done {ended}".rstrip()
 
 
