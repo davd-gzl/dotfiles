@@ -14,14 +14,16 @@ current() {
     gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null | tr -d "'"
 }
 
+# color-scheme goes last: with gtk-theme changed after it, Electron apps and
+# Firefox stayed light on a switch to dark.
 apply_dark() {
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
     gsettings set org.gnome.desktop.interface gtk-theme "$DARK_GTK"
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 }
 
 apply_light() {
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
     gsettings set org.gnome.desktop.interface gtk-theme "$LIGHT_GTK"
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
 }
 
 print_status() {
