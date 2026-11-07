@@ -28,7 +28,8 @@ case "$event" in
         case "$verdict" in
             needs*) u=critical; c=claude-waiting
                     body=$(printf '%s' "${verdict#needs }" | cut -c1-200 | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g') ;;
-            *)      u=low;      c=claude-done;    body="" ;;
+            *)      u=low;      c=claude-done
+                    body=$(printf '%s' "${verdict#done}" | sed 's/^ //' | cut -c1-200 | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g') ;;
         esac ;;
     StopFailure)  u=critical; c=claude-error;     body="${msg:-Claude crashed — check the chat}" ;;
     Notification) u=critical; c=claude-waiting;   body="${msg:-Waiting for your input}" ;;

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Stop hook helper for notify.sh: does this stopped turn need the user?
-#   notify-gate.py <transcript>   prints "needs <line>" or "done", or nothing to stay silent.
+#   notify-gate.py <transcript>   prints "needs <line>" or "done <line>", or nothing to stay silent.
 # A reply asking something always notifies. Otherwise silent while background work the session
 # started still runs, and for a request answered within LONG_RUN seconds of being typed.
 import json
@@ -75,7 +75,8 @@ class Turn:
             return f"needs {tldr or text.splitlines()[-1]}"
         if self.running or not (self.now and self.asked_at) or self.now - self.asked_at < LONG_RUN:
             return None
-        return "done"
+        ended = next((l for l in text.splitlines() if l.startswith(("Done:", "Not done:"))), tldr)
+        return f"done {ended}".rstrip()
 
 
 if __name__ == "__main__":
