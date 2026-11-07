@@ -27,8 +27,6 @@ case "${1:-status}" in
             systemctl --user stop "$UNIT"
         else
             systemctl --user start "$UNIT"
-            # New reviews go out with this sync. Waybar's PATH lacks ~/.local/bin.
-            PATH="$HOME/.local/bin:$PATH" nohup ink-reviews >"${XDG_RUNTIME_DIR:-/tmp}/ink-reviews.log" 2>&1 &
         fi
         refresh_bar
         ;;
