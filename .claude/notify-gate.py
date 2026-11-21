@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 
 LONG_RUN = 300
-ASKS = re.compile(r"^`[a-zA-Z][a-zA-Z ]*`:|\bwaits? on `|\b(?:say|type|send) [`\"]|\btell me to\b|\?\s*(?:\n+TL;DR.*)?\Z", re.M)
+ASKS = re.compile(r"^`[a-zA-Z][a-zA-Z ]*`:|\bwaits? on `|\b(?:say|type|send) [`\"]|\btell me to\b|\?\s*(?:\n+TL;DR.*)?(?:\n+(?:All|Not all) good.*)?\Z", re.M)
 FENCE = re.compile(r"```.*?```", re.S)
 LAUNCHED = ("Async agent launched", "Workflow launched", "running in background with ID")
 ENDED = re.compile(r"<tool-use-id>(.*?)</tool-use-id>")
